@@ -1,5 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
+import os
 
 def build_model(input_shape, num_classes):
     """
@@ -51,4 +52,5 @@ def main():
     # TODO: Save the trained model
 
 if __name__ == '__main__':
+    print("Files in data/:", os.listdir("data"))    
     main()
