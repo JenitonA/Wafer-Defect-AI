@@ -1,6 +1,18 @@
 import tensorflow as tf
 from tensorflow import keras
 import os
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import skimage
+from skimage import measure
+from skimage.transform import radon
+from skimage.transform import probabilistic_hough_line
+from skimage import measure
+from scipy import interpolate
+from scipy import stats
+
+
 
 def build_model(input_shape, num_classes):
     """
@@ -51,6 +63,54 @@ def main():
     # TODO: Evaluate the model using model.evaluate()
     # TODO: Save the trained model
 
+    # Load the data from the pickle file
+    file_path = os.path.join('data', 'LSWMD.pkl')
+    df = pd.read_pickle(file_path)
+
+    # Dont need wafer index feature in classification
+    df = df.drop(['waferIndex'], axis = 1)
+
+    # # Drawing the graph that shows wafer index distribution
+    # uni_Index=np.unique(df.waferIndex, return_counts=True)
+    # plt.bar(uni_Index[0],uni_Index[1], color='red', align='center', alpha=0.5)
+    # plt.title(" wafer Index distribution")
+    # plt.xlabel("index #")
+    # plt.ylabel("frequency")
+    # plt.xlim(0,26)
+    # plt.ylim(30000,34000)
+    # plt.show()
+
+    df['failureNum']=df.failureType
+    df['trainTestNum']=df.trianTestLabel
+    mapping_type={'Center':0,'Donut':1,'Edge-Loc':2,'Edge-Ring':3,'Loc':4,'Random':5,'Scratch':6,'Near-full':7,'none':8}
+    mapping_traintest={'Training':0,'Test':1}
+    df=df.replace({'failureNum':mapping_type, 'trainTestNum':mapping_traintest})
+
+    df_withpattern = df[(df['failureNum']>=0) & (df['failureNum']<=7)]
+    df_withpattern = df_withpattern.reset_index()
+    
+    num_to_show = 20
+    total_samples = df_withpattern.shape[0]
+
+    # Calculate start index to get 50 samples from the middle
+    start_idx = max(0, (total_samples // 2) - (num_to_show // 2))
+    end_idx = start_idx + num_to_show
+
+    fig, ax = plt.subplots(nrows = 2, ncols = 10, figsize=(30, 30))
+    ax = ax.ravel(order='C')
+    for i in (range(20)):
+        img = df_withpattern.waferMap[i]
+        ax[i].imshow(img)
+        ax[i].set_title(df_withpattern.failureType[i][0][0], fontsize=10)
+        ax[i].set_xlabel(df_withpattern.index[i], fontsize=8)
+        ax[i].set_xticks([])
+        ax[i].set_yticks([])
+    plt.tight_layout()
+    plt.show() 
+
+    # START OF DATA TRANSFORMATION
+
+
+
 if __name__ == '__main__':
-    print("Files in data/:", os.listdir("data"))    
     main()
