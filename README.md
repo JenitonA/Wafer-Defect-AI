@@ -19,11 +19,11 @@ Automating defect detection with deep learning helps scale up quality assurance 
 
 ### 1. Imports
 We import all the libraries needed for the project:
-- `tensorflow` & `keras` → for building and training the CNN  
-- `pandas` & `numpy` → for handling and manipulating data  
-- `matplotlib` → for plotting wafer maps  
-- `scikit-image` → for image processing  
-- `scipy` → for interpolation and statistics  
+- `tensorflow` & `keras` - for building and training the CNN  
+- `pandas` & `numpy` - for handling and manipulating data  
+- `matplotlib` - for plotting wafer maps  
+- `scikit-image` - for image processing  
+- `scipy` - for interpolation and statistics  
 
 **Relevance/Importance:** Without these libraries, the notebook cannot run. This step sets up the environment for everything else.
 
