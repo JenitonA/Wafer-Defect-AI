@@ -1,4 +1,4 @@
-# Wafer-Defect-AI
+# Wafer Defect Detection
 
 ## Project Overview
 This project uses a **Convolutional Neural Network (CNN)** to detect and classify defects on semiconductor wafers.  
