@@ -24,6 +24,12 @@ Automating defect detection with deep learning helps scale up quality control ad
 
 ---
 
+## Data Exploration and Visualization
+
+<img width="502" height="1308" alt="image" src="https://github.com/user-attachments/assets/da8ed033-7748-47ad-bfe1-fc14ccd74ed3" />
+
+---
+
 ## Project Structure
 
 **Notes:**  
