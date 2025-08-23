@@ -17,7 +17,7 @@ This helps engineers reduce waste, **improve process reliability, and ensure hig
 - Model evaluation on unseen test data  
 - Visualization of learning curves  
 
-## 🛠️ Requirements
+## Requirements
 Make sure the following packages are installed:
 
 ```bash
