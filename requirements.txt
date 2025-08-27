@@ -2,3 +2,5 @@ tensorflow
 numpy
 panda
 matplotlib
+scikit-image
+seaborn
