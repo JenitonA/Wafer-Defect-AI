@@ -155,7 +155,7 @@ To verify that resizing preserves important defect patterns:
 
 ---
 
-#### Train–Validation–Test Split  
+#### Train, Validation, and Test Split
 The dataset is divided into:  
 - **Training set:** 27,364 samples  
 - **Validation set:** 6,841 samples  
@@ -184,7 +184,7 @@ The model is trained on the processed wafer maps using supervised learning. Key 
 - **Batch Training**  
   Uses mini-batches to stabilize gradient updates and improve generalization.
 
-**Relevance/Importance:** Careful training design ensures the model learns effectively without bias or overfitting.
+**Relevance/Importance:** Careful training design ensures the model learns effectively without bias or overfitting. An example is provided below for reference.
 
 <img width="1234" height="693" alt="image" src="https://github.com/user-attachments/assets/feece42a-d8cf-42b3-8e5d-5d1b43a5d910" />
 
