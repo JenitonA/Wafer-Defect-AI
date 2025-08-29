@@ -15,7 +15,7 @@ Automating defect detection with deep learning helps scale up quality assurance 
 
 ---
 
-## Key Sections Explained
+## Vital Sections Explained
 
 ### 1. Imports
 We import all the libraries needed for the project:
@@ -127,7 +127,7 @@ This step ensures that all wafer maps are in the correct format, properly normal
 
 ---
 
-## Key Steps  
+## Steps Required  
 
 #### Separating Features and Labels  
 - **Features (X):** Wafer map images  
