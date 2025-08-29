@@ -69,7 +69,7 @@ The `build_model()` function defines a CNN:
 - Wafer maps are visualized using a custom colormap to highlight defects.  
 - Each defect type is shown for comparison.
 
-<img width="502" height="1308" alt="image" src="https://github.com/user-attachments/assets/da8ed033-7748-47ad-bfe1-fc14ccd74ed3" />
+<img width="690" height="1340" alt="image" src="https://github.com/user-attachments/assets/306f18c7-b2ad-46e4-b3ce-7a2c2b741cb2" />
 
 **Relevance/Importance:** Visualization helps understand the dataset, detect imbalances, and confirm that defect patterns are visible and distinguishable.
 
