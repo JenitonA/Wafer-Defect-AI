@@ -132,7 +132,7 @@ This step ensures that all wafer maps are in the correct format, properly normal
 #### Separating Features and Labels  
 - **Features (X):** Wafer map images  
 - **Labels (y):** Defect category identifiers  
-- This separation allows the model to learn the mapping from wafer images → defect classes.  
+- This separation allows the model to learn the mapping from wafer images to defect classes.  
 
 ---
 
