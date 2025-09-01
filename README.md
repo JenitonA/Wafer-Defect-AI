@@ -125,6 +125,12 @@ In summary, data augmentation created a balanced dataset that allows the model t
 Once the dataset has been augmented, it needs to be prepared for training the Convolutional Neural Network (CNN).  
 This step ensures that all wafer maps are in the correct format, properly normalized, and split into training, validation, and test sets.  
 
+## 8.2 Model Architecture
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/a165ebf6-15c1-43f4-8cff-9bbcebb76f63" />
+
+- Full model arhitecture is developed and demonstrated above.
+  
 ---
 
 ## Steps Required  
