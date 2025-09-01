@@ -18,17 +18,19 @@ Automating defect detection with deep learning helps scale up quality assurance 
 ## Vital Sections Explained
 
 ### 1. Imports
-We import all the libraries needed for the project:
-- `tensorflow` & `keras` – for building and training the CNN  
-- `pandas` & `numpy` – for handling and manipulating data  
-- `matplotlib` & `ListedColormap` – for visualizing wafer maps and plots  
-- `skimage` (measure, radon, probabilistic_hough_line, transform) – for image processing and feature extraction  
-- `sklearn.model_selection` – for splitting data into training and validation sets  
-- `scipy.interpolate` – for resizing and transforming wafer maps accurately  
-- `os` – for managing file paths  
 
-**Relevance/Importance:**  
-This step ensures the environment is fully prepared. Without these libraries, the notebook cannot run. These imports provide all the tools needed to load, process, visualize, and prepare wafer data for modelling.
+In this project, we load all the necessary libraries to handle data, process images, and train the CNN model:
+
+- `tensorflow` & `keras` – used to build and train the convolutional neural network  
+- `os` – for working with files and directories  
+- `pandas` – to manage and manipulate datasets efficiently  
+- `cv2` (OpenCV) – for image preprocessing and transformations  
+- `numpy` – for numerical operations and array handling  
+- `matplotlib` – to visualize wafer maps and plots  
+- `sklearn.model_selection` – to split data into training, validation, and test sets  
+- `skimage.transform.resize` – to resize wafer images to a consistent shape  
+
+**Relevance/Importance:** These libraries are essential to the project workflow. They allow us to prepare the data, perform image transformations, and train a CNN. Without them, none of the processing or model training steps would be possible.
 
 ---
 
@@ -73,6 +75,8 @@ The `build_model()` function defines a CNN:
 - Each defect type is shown for comparison.
 
 <img width="1490" height="622" alt="image" src="https://github.com/user-attachments/assets/25d03853-0f74-4820-b7dd-cc61f2a37dde" />
+
+<img width="781" height="403" alt="image" src="https://github.com/user-attachments/assets/46ea6e41-163c-466d-b7b4-e9c918a29b05" />
 
 **Relevance/Importance:** Visualization helps understand the dataset, detect imbalances, and confirm that defect patterns are visible and distinguishable.
 
@@ -127,9 +131,15 @@ This step ensures that all wafer maps are in the correct format, properly normal
 
 ## 8.2 Model Architecture
 
+The convolutional neural network (CNN) used for wafer defect classification follows a structured, multi-layer design to extract features and perform classification.
+
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/a165ebf6-15c1-43f4-8cff-9bbcebb76f63" />
 
-- Full model arhitecture is developed and demonstrated above.
+**Structure and Flow:**
+- This architecture balances complexity and efficiency for wafer defect detection.  
+- Convolutional blocks extract hierarchical features from wafer maps.  
+- Fully connected layers combine learned features for accurate classification across all defect types.  
+- The model is designed to handle imbalanced datasets while learning subtle patterns in the wafer maps.  
   
 ---
 
@@ -249,26 +259,32 @@ Key findings from training and evaluation:
 ## Project Structure
 
 **Notes:**  
-- `src/` – contains the Jupyter notebook (`.ipynb`) where all code and analysis are performed.  
-- `data/` – place your dataset files here. Large datasets should not be uploaded to GitHub; provide download links if necessary.  
-- `images/` – store plots and visualizations of wafer maps for display in the README.  
-- `README.md` – located in the root folder; explains the project, methodology, and results for readers.
+- `src/` – contains the Jupyter notebook (`.ipynb`) with all code, data processing, and analysis steps.  
+- `data/` – store your dataset files here. For large datasets, avoid uploading them directly to GitHub; instead, provide download links or instructions.  
+- `images/` – save all plots and visualizations of wafer maps or other figures used in the README.  
+- `README.md` – sits in the root folder; provides an overview of the project, methodology, results, and explanations for readers.
+
+**Relevance/Importance:** Organizing your project in this way ensures clarity and reproducibility. It helps collaborators and reviewers quickly locate code, data, and results, and it keeps the repository tidy and professional.
 
 ---
 
+## References
+
+
+
 ## Requirements
-You’ll need the following Python packages:  
 
-- tensorflow  
-- keras  
-- numpy  
-- pandas  
-- matplotlib  
-- scikit-image  
-- scipy
-- seaborn
+To run this project, the following Python packages are required:
 
-Install them with:
+- `tensorflow` & `keras` – for building and training the convolutional neural network  
+- `numpy` – for numerical computations and array operations  
+- `pandas` – for handling and manipulating datasets  
+- `matplotlib` – for visualizing wafer maps and plots  
+- `scikit-image` – for image processing and transformations  
+- `scipy` – for interpolation and other scientific computations  
+- `seaborn` – for creating advanced visualizations  
+
+**Installation:** You are able to install all required packages using pip:
 
 ```bash
 pip install tensorflow keras numpy pandas matplotlib scikit-image scipy seaborn
