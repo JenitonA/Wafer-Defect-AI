@@ -34,22 +34,39 @@ In this project, we load all the necessary libraries to handle data, process ima
 
 ---
 
-### 2. Model Definition
-The `build_model()` function defines a CNN:
-- Three convolutional layers followed by pooling layers  
-- Flatten layer to prepare data for fully connected layers  
-- Dense layers for combining features  
-- Output layer with softmax activation for classifying defects  
+### 2. Model Definition  
 
-**Relevance/Importance:** This is the core of the project. The CNN will learn patterns in wafer images to distinguish different types of defects.
+The `build_model()` function constructs a convolutional neural network (CNN) specifically designed for wafer map classification. The architecture includes:  
+
+**Initial Convolutional Layer** – applies 16 filters to capture simple features such as edges and shapes.  
+**Block 1** – a convolutional layer with 64 filters, followed by batch normalization and max pooling to stabilize training and reduce spatial size.  
+**Block 2** – another convolutional layer with 128 filters, also paired with normalization and pooling, allowing the model to learn more detailed structures.  
+**Global Average Pooling** – condenses feature maps into a compact representation, reducing parameters and mitigating overfitting.  
+**Fully Connected Layer** – a dense layer with 128 neurons, batch normalization, and dropout for stronger generalization.  
+**Output Layer** – a softmax layer that produces class probabilities across the defect categories.  
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/a165ebf6-15c1-43f4-8cff-9bbcebb76f63" />
+
+**Relevance/Importance:**  
+This section defines the backbone of the project. By stacking convolutional, pooling, and dense layers, the model can progressively extract meaningful patterns from wafer images and classify them into defect types with high accuracy.  
 
 ---
 
-### 3. Build and Summarize Model
-- The CNN is instantiated using the input image size and number of defect classes.  
-- `model.summary()` prints each layer and the number of parameters.  
+### 3. Build and Summarize Model  
 
-**Relevance/Importance:** Helps ensure the model is built correctly and provides insight into its complexity.
+The model is created using the specified input shape of **42×42×1** (grayscale wafer images) and **9 output classes** (the defect categories). Once built, the summary provides a layer-by-layer breakdown:  
+
+**Conv2D + Batch Normalization** – first layers extract low-level features and normalize activations for more stable training.  
+**Conv2D + Batch Normalization + MaxPooling (Block 1)** – captures more complex spatial patterns while reducing dimensionality.  
+**Conv2D + Batch Normalization + MaxPooling (Block 2)** – learns high-level structures such as distinct defect shapes.  
+- **Global Average Pooling** – compresses feature maps into a compact representation, lowering parameter count.  
+- **Dense (128 units) + Batch Normalization + Dropout** – combines extracted features while controlling overfitting.  
+- **Final Dense (9 units, softmax)** – outputs probabilities for each defect class.  
+
+The summary also reports the total number of parameters (**102k**), showing the model is complex enough to learn meaningful wafer features but still efficient for training.  
+
+**Relevance/Importance:**  
+Summarizing the model confirms that the architecture matches the design intent. It provides transparency into how many parameters must be trained, helping assess model size, training requirements, and potential risks of overfitting.  
 
 ---
 
@@ -62,23 +79,28 @@ The `build_model()` function defines a CNN:
 ---
 
 ### 5. Preprocessing and Cleaning
-- Removes unnecessary columns like `waferIndex`.  
-- Converts categorical labels into numerical labels (`failureNum` and `trainTestNum`).  
-- Splits data into training, testing, and unlabeled sets.  
+- Removed irrelevant columns such as `waferIndex` and `lotName` that are not useful for classification.  
+- Corrected the mislabeled `trianTestLabel` column to `trainTestLabel` for consistency.  
+- Converted categorical defect labels into numerical values (`failureNum`) and assigned numerical values to the training/test split (`trainTestNum`).  
+- Separated unlabeled wafers (≈638k) from labeled wafers (≈173k) to ensure only usable data is included in training and evaluation.  
 
-**Relevance/Importance:** Preprocessing ensures the CNN can use the data, avoids errors during training, and separates training and testing data for proper evaluation.
+**Relevance/Importance:** Preprocessing standardizes the dataset so the CNN can interpret it correctly. Removing irrelevant columns avoids noise, encoding labels into numbers makes the data machine-readable, and splitting labeled from unlabeled wafers prevents training issues while preserving the option for semi-supervised learning later.
 
 ---
 
-### 6. Data Exploration and Visualization
-- Wafer maps are visualized using a custom colormap to highlight defects.  
-- Each defect type is shown for comparison.
+### 6. EDA and Visualization
+- Visualized sample wafer maps for each defect type using a custom colour scheme (black = background, green = good die, red = defective die). This provided an intuitive look at how different defect patterns appear on wafers.  
+- Analyzed wafer map shapes by computing aspect ratios to detect irregular or distorted maps. Wafers with aspect ratios greater than 1.3 (≈2.3% of the labelled set) were identified as outliers and removed.  
+- Standardized all wafer maps by resizing them to 42×42 pixels to ensure consistent input dimensions for the CNN.  
+- Split the cleaned dataset into training (85%) and testing (15%) subsets, stratified by defect type to preserve class distribution.  
 
-<img width="1490" height="622" alt="image" src="https://github.com/user-attachments/assets/25d03853-0f74-4820-b7dd-cc61f2a37dde" />
+<img width="1027" height="630" alt="image" src="https://github.com/user-attachments/assets/53d5e8d3-f556-4d4a-a866-739fcb6ed098" />
 
-<img width="781" height="403" alt="image" src="https://github.com/user-attachments/assets/46ea6e41-163c-466d-b7b4-e9c918a29b05" />
+<img width="1490" height="622" alt="image" src="https://github.com/user-attachments/assets/8e8669e1-5a8d-49e2-b103-2599e5e5b98a" />
 
-**Relevance/Importance:** Visualization helps understand the dataset, detect imbalances, and confirm that defect patterns are visible and distinguishable.
+<img width="781" height="403" alt="image" src="https://github.com/user-attachments/assets/46492482-528e-4e4d-9c55-ca40e499ca2d" />
+
+**Relevance/Importance:** EDA highlights data quality issues and ensures the dataset is clean, balanced, and standardized. By filtering out abnormal wafers and resizing inputs, the model is trained on consistent, reliable data. Splitting into training and testing sets enables unbiased performance evaluation.
 
 ---
 
@@ -132,8 +154,6 @@ This step ensures that all wafer maps are in the correct format, properly normal
 ## 8.2 Model Architecture
 
 The convolutional neural network (CNN) used for wafer defect classification follows a structured, multi-layer design to extract features and perform classification.
-
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/a165ebf6-15c1-43f4-8cff-9bbcebb76f63" />
 
 **Structure and Flow:**
 - This architecture balances complexity and efficiency for wafer defect detection.  
