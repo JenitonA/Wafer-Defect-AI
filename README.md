@@ -231,7 +231,8 @@ Organizing the project this way ensures reproducibility, clarity, and profession
 
 ## References
 
-S. Biswas, D. A. Palanivel, and S. Gopalakrishnan, “A Novel Convolution Neural Network Model for Wafer Map Defect Patterns Classification,” in *Proc. IEEE TENSYMP*, Jul. 2022, pp. 1–6. doi: 10.1109/TENSYMP.2022.XXXXXXX.
+[1] S. Biswas, D. A. Palanivel, and S. Gopalakrishnan, "A Novel Convolution Neural Network Model for Wafer Map Defect Patterns Classification," in *Proc. IEEE TENSYMP*, Jul. 2022, pp. 1–6, doi: 10.1109/TENSYMP.2022.XXXXXXX.
+
 
 ---
 
