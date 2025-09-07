@@ -138,107 +138,116 @@ After splitting and formatting, the data was ready to be fed into the neural net
 
 ---
 
-## 9. Model Training
+### 9. Model Training  
+The model was trained using the augmented wafer datasets with a strategy designed to encourage stable learning and prevent overfitting.  
 
-The model is trained on the processed wafer maps using supervised learning. Key techniques include:
+**Epochs:** 20  
+**Batch size:** 64  
+**Optimizer:** Adam  
+**Initial learning rate:** 0.001, reduced by half every five epochs  
+**Class weights:** applied to account for class imbalance  
+**Early stopping:** monitored the validation loss, stopping training if no improvement was seen within three epochs and restoring the best weights  
 
-- **Learning Rate Scheduling**  
-  Adjusts learning rate dynamically to balance fast convergence and stability.
+This training approach combined multiple safeguards. The step-based learning rate schedule allowed the optimizer to take larger steps early on and then refine the updates as training progressed. Early stopping prevented the model from continuing once validation performance stopped improving, which reduces overfitting. Balancing the class weights ensured that minority defect categories had an equal influence during training.  
 
-- **Class Weights**  
-  Ensures minority defect classes are fairly represented, addressing dataset imbalance.
-
-- **Early Stopping**  
-  Stops training when validation loss no longer improves, avoiding overfitting.
-
-- **Batch Training**  
-  Uses mini-batches to stabilize gradient updates and improve generalization.
-
-**Relevance/Importance:** Careful training design ensures the model learns effectively without bias or overfitting. An example is provided below for reference.
-
-<img width="1234" height="693" alt="image" src="https://github.com/user-attachments/assets/feece42a-d8cf-42b3-8e5d-5d1b43a5d910" />
+Over the course of training, accuracy increased consistently while validation loss decreased, with the final model achieving close to **88% validation accuracy**. This demonstrates that the network was able to learn distinctive features across the full range of defect types rather than over-relying on the dominant “none” category.  
 
 ---
 
-## 10. Training History Visualization
+### 10. Visualizing Training History  
+To evaluate how the model improved during training, the accuracy and loss values for both training and validation sets were plotted across all epochs.  
 
-After training, we analyze learning curves:
+**Accuracy Curve:** Showed a steady increase in both training and validation accuracy, indicating that the model was successfully learning discriminative features over time.  
+**Loss Curve:** Demonstrated a clear downward trend for training loss, while validation loss also decreased overall with some fluctuations. This behaviour suggests the model generalized well without severe overfitting.  
 
-- **Accuracy Curves**  
-  Demonstrate how well the model performs over time for both the training and validation sets.
+By examining these plots, it became clear that the learning rate schedule and early stopping mechanisms worked effectively, allowing the model to converge while maintaining good validation performance. The final curves reflected a strong balance between training and validation metrics, supporting the robustness of the trained CNN.  
 
-- **Loss Curves**  
-  Indicate whether the model is converging correctly or overfitting.
-
-**Relevance/Importance:** Visualization provides insights into training behaviour and allows early detection of issues.
-
-<img width="1189" height="490" alt="image" src="https://github.com/user-attachments/assets/4a36c0d6-df69-48a9-92bc-794298b4290d" />
+<img width="1189" height="490" alt="image" src="https://github.com/user-attachments/assets/5270f61b-ff54-4ac0-b312-86caf43baf59" />
 
 ---
 
-## 11. Model Evaluation
+## 11. Model Evaluation  
 
-The model is tested on unseen data to measure generalization.
+After training the CNN, we evaluated its performance on the test set to assess how well it generalizes to unseen wafer maps. The final test results were:  
 
-## 11.2 Confusion Matrix 
-  Visualizes correct vs. incorrect predictions per defect class.
+**Test Loss:** 0.4318  
+**Test Accuracy:** 86.74%  
 
-- **Classification Report**  
-  Summarizes precision, recall, and F1-score for each class.
+These results indicate that the model is capable of correctly identifying wafer defects in the majority of cases while maintaining a low loss, demonstrating good generalization.
 
-- **Overall Accuracy**  
-  Provides a direct measure of how well the model generalizes to new wafer maps.
+### 11.2 Confusion Matrix
 
-**Relevance/Importance:** Comprehensive evaluation ensures reliability in real-world wafer defect classification.
+To understand how the model performs across different defect types, we analyzed its predictions using a normalized confusion matrix and standard classification metrics such as precision, recall, and F1 score.  
 
-<img width="928" height="790" alt="image" src="https://github.com/user-attachments/assets/da1ccb81-35f2-4caa-b1a3-cb7b2650ecd3" />
+Key observations:  
+- The model achieved high accuracy on most classes, with "Edge-Ring" and "Near-full" showing near-perfect identification.  
+- Classes with fewer samples, such as "Scratch" and "Loc," showed slightly lower precision or recall, reflecting the challenges of limited data for these defect types.  
+- The overall weighted F1 score was **0.87**, indicating balanced performance across all classes.  
+
+The normalized confusion matrix provides a visual representation of correct and incorrect predictions, highlighting the model's strengths and areas for improvement. Comparing the first 100 predictions with their proper labels further confirms the model reliably distinguishes between defect types while maintaining robust performance on the majority "none" class.
+
+This analysis demonstrates that the model can be used confidently for automated wafer defect classification, and it also provides guidance for future enhancements through targeted data augmentation or additional training on underrepresented classes.
+
+<img width="924" height="790" alt="image" src="https://github.com/user-attachments/assets/6cad36d2-6d08-4ce1-bb7d-fec28bb3b3ba" />
+
+---
+
+## 12. Save the Trained Model
+
+After completing training and evaluation, the final step is to save the trained CNN model. Saving the model allows it to be reused later without the need to retrain, which is especially useful for deployment or future experiments.
+
+The model is stored in a dedicated `models` directory in the project. Once saved, it can be easily loaded for inference or further fine-tuning.  
+
+**Saved Model Path:** `..\models\wafer_defect_model.keras`  
+
+This ensures that the trained network, along with its learned weights and architecture, is preserved for future use.
 
 ---
 
-## 12. Results & Insights
-
-Key findings from training and evaluation:
-
-- **High Accuracy**  
-  The CNN achieved strong classification accuracy across defect types.
-
-- **Class Imbalance Effects**  
-  Minority defect classes benefited from class weighting, resulting in reduced misclassification.
-
-- **Feature Learning**  
-  CNN filters effectively captured spatial defect patterns (scratches, rings, clusters).
-
----
 
 ## Project Structure
 
 **Notes:**  
-- `src/` – contains the Jupyter notebook (`.ipynb`) with all code, data processing, and analysis steps.  
-- `data/` – store your dataset files here. For large datasets, avoid uploading them directly to GitHub; instead, provide download links or instructions.  
-- `images/` – save all plots and visualizations of wafer maps or other figures used in the README.  
-- `README.md` – sits in the root folder; provides an overview of the project, methodology, results, and explanations for readers.
+- `src/` – contains the Jupyter notebook (`.ipynb`) with all code, including data preprocessing, visualization, augmentation, model training, and evaluation steps.  
+- `data/` – store your dataset files here. For large datasets, avoid uploading them directly to GitHub; instead, provide download links or instructions for obtaining the data.  
+- `images/` – save all plots, wafer map visualizations, and figures used in the README, such as training history graphs, confusion matrices, and sample wafer maps.  
+- `models/` – stores the trained CNN model (`wafer_defect_model.keras`) for later use without retraining.  
+- `README.md` – sits in the root folder; provides a project overview, methodology, results, and explanations of the workflow and model performance.
 
-**Relevance/Importance:** Organizing your project in this way ensures clarity and reproducibility. It helps collaborators and reviewers quickly locate code, data, and results, and it keeps the repository tidy and professional.
+**Workflow Summary:**  
+**Preprocessing and Cleaning** – Prepare wafer maps, remove outliers, and convert categorical labels into numerical values.  
+**Exploratory Data Analysis (EDA)** – Visualize wafer defects, resize wafer maps to a consistent shape, and analyze class distributions.  
+**Data Augmentation** – Apply flips, rotations, and affine transformations to balance minority classes; downsample the majority `none` class for the test set.  
+**Training-Validation Split** – Split the augmented dataset into 80% training and 20% validation; prepare data arrays for CNN input.  
+**Model Training** – Train a CNN using Adam optimizer with learning rate scheduling, early stopping, and class weights to handle imbalance.  
+**Visualize Training History** – Plot training and validation accuracy and loss over epochs to assess learning behavior.  
+**Model Evaluation** – Evaluate the model on an independent test set, compute test loss, accuracy, F1-score, and generate a confusion matrix.  
+**Save Trained Model** – Save the final trained model to `models/` for future use without retraining.
+
+**Relevance/Importance:**  
+Organizing the project this way ensures reproducibility, clarity, and professionalism. It allows collaborators or reviewers to quickly locate code, datasets, and results while keeping the repository clean and structured.
 
 ---
 
 ## References
 
+S. Biswas, D. A. Palanivel, and S. Gopalakrishnan, “A Novel Convolution Neural Network Model for Wafer Map Defect Patterns Classification,” in *Proc. IEEE TENSYMP*, Jul. 2022, pp. 1–6. doi: 10.1109/TENSYMP.2022.XXXXXXX.
 
+---
 
 ## Requirements
 
-To run this project, the following Python packages are required:
+To run this project, you will need the following Python packages:
 
-- `tensorflow` & `keras` – for building and training the convolutional neural network  
-- `numpy` – for numerical computations and array operations  
-- `pandas` – for handling and manipulating datasets  
-- `matplotlib` – for visualizing wafer maps and plots  
-- `scikit-image` – for image processing and transformations  
-- `scipy` – for interpolation and other scientific computations  
-- `seaborn` – for creating advanced visualizations  
+- `tensorflow` & `keras` – for building, training, and evaluating the convolutional neural network (CNN).  
+- `numpy` – for numerical computations, array manipulation, and mathematical operations.  
+- `pandas` – for managing and processing structured datasets.  
+- `matplotlib` – for visualizing wafer maps, training history, and other plots.  
+- `scikit-image` – for image processing, resizing, and augmentation of wafer maps.  
+- `scipy` – for scientific computations and interpolation operations.  
+- `seaborn` – for advanced visualization, including heatmaps and statistical plots.
 
-**Installation:** You are able to install all required packages using pip:
+**Installation:** You can install all required packages at once using pip:
 
 ```bash
 pip install tensorflow keras numpy pandas matplotlib scikit-image scipy seaborn
