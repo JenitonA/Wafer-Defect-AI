@@ -71,6 +71,7 @@ Summarizing the model confirms that the architecture matches the design intent. 
 ---
 
 ### 4. Load Data
+
 - The wafer dataset (`LSWMD.pkl`) is loaded with `pandas`.  
 - Displaying the first rows confirms that the data loaded correctly.  
 
@@ -79,6 +80,7 @@ Summarizing the model confirms that the architecture matches the design intent. 
 ---
 
 ### 5. Preprocessing and Cleaning
+
 - Removed irrelevant columns such as `waferIndex` and `lotName` that are not useful for classification.  
 - Corrected the mislabeled `trianTestLabel` column to `trainTestLabel` for consistency.  
 - Converted categorical defect labels into numerical values (`failureNum`) and assigned numerical values to the training/test split (`trainTestNum`).  
@@ -89,6 +91,7 @@ Summarizing the model confirms that the architecture matches the design intent. 
 ---
 
 ### 6. EDA and Visualization
+
 - Visualized sample wafer maps for each defect type using a custom colour scheme (black = background, green = good die, red = defective die). This provided an intuitive look at how different defect patterns appear on wafers.  
 - Analyzed wafer map shapes by computing aspect ratios to detect irregular or distorted maps. Wafers with aspect ratios greater than 1.3 (≈2.3% of the labelled set) were identified as outliers and removed.  
 - Standardized all wafer maps by resizing them to 42×42 pixels to ensure consistent input dimensions for the CNN.  
@@ -106,101 +109,32 @@ Summarizing the model confirms that the architecture matches the design intent. 
 
 ### 7. Data Augmentation  
 
-An inspection of the dataset shows that **the “none” (no defect) category accounts for about 68% of all samples**, while defect-related classes are significantly underrepresented.  
-This **imbalance** can cause the CNN to overfit toward the dominant “none” class and misclassify rare defect types.  
+The original dataset was highly imbalanced, with almost 70% of the samples labelled as no visible defect. If left uncorrected, the model would become biased toward predicting this dominant class and fail to recognize less common but critical defect types.  
 
-To address this, **augmentation techniques** were applied depending on the defect type:  
-- **Center, Edge-Loc, Edge-Ring, Loc:** wafer maps were shifted and flipped to simulate positional variation.  
-- **Scratch:** rotated to preserve the elongated defect structure.  
-- **Donut, Random, Near-full:** multiple rotations combined with light noise injection to enlarge the dataset.  
+To correct this, the testing data was adjusted by reducing the number of “none” samples so that the evaluation would better reflect performance across all classes. For the training data, two strategies were combined:  
 
-**Processing steps:**  
-1. Reduced the “none” class from 117,945 samples to 8,000 to prevent overrepresentation.  
-2. Augmented minority classes until each had ~2000 samples.  
-3. Reconstructed the dataset to achieve a more balanced distribution across categories.  
+**Downsampling** was applied to classes with too many examples.  
+**Data augmentation** techniques such as rotations, flips, scaling, shifting, and affine transformations were used to expand underrepresented classes, creating new but realistic wafer patterns.  
 
-**Impact of augmentation:**  
-- Reduces bias toward the majority class  
-- Encourages the CNN to learn distinctive defect features  
-- Improves robustness by exposing the model to varied representations of defects  
+After balancing, each defect type contained 2,000 samples, resulting in a uniform training set of 18,000 wafers.  
 
-**Class Distribution Before vs. After Augmentation:**  
-
-| Defect Type   | Original Samples | After Augmentation |
-|---------------|------------------|--------------------|
-| none          | 117,945          | 8,000              |
-| Edge-Ring     | 7,744            | 7,744              |
-| Edge-Loc      | 4,151            | 4,151              |
-| Center        | 3,435            | 3,435              |
-| Loc           | 2,875            | 2,875              |
-| Scratch       | 954              | 2,000              |
-| Random        | 693              | 2,000              |
-| Donut         | 444              | 2,000              |
-| Near-full     | 119              | 2,000              |
-
-Additionally, an analysis of wafer map dimensions helped determine the **input size for the CNN**, ensuring consistency across all samples.  
-
-In summary, data augmentation created a balanced dataset that allows the model to learn rare defect types fairly, rather than defaulting to the majority class.  
-
-<img width="859" height="477" alt="image" src="https://github.com/user-attachments/assets/d6a0941a-0e2c-459b-8415-0128cd345e69" />
+**Relevance/Importance:** Balancing and augmentation prevent the network from overfitting to the most common class and force it to learn meaningful features across all defect types. This step improves accuracy, fairness, and generalization of the final CNN.
 
 ---
 
-### 8. Data Preparation for the Model  
+### 8. Split Training Data
 
-Once the dataset has been augmented, it needs to be prepared for training the Convolutional Neural Network (CNN).  
-This step ensures that all wafer maps are in the correct format, properly normalized, and split into training, validation, and test sets.  
+To evaluate the model correctly, the labelled dataset was split into three groups:  
 
-## 8.2 Model Architecture
+**Training set (80%)** – used to teach the CNN the features of each wafer defect.  
+**Validation set (20%)** – held out during training to tune hyperparameters and check for overfitting.  
+**Independent test set** – completely separate from training and validation, reserved for the final performance evaluation.  
 
-The convolutional neural network (CNN) used for wafer defect classification follows a structured, multi-layer design to extract features and perform classification.
+All wafer maps were reshaped into 4D arrays (samples × height × width × channel) to match the CNN input format of **(26×26×1)**. Corresponding defect labels were also converted into numerical arrays for compatibility with the model.  
 
-**Structure and Flow:**
-- This architecture balances complexity and efficiency for wafer defect detection.  
-- Convolutional blocks extract hierarchical features from wafer maps.  
-- Fully connected layers combine learned features for accurate classification across all defect types.  
-- The model is designed to handle imbalanced datasets while learning subtle patterns in the wafer maps.  
-  
----
+After splitting and formatting, the data was ready to be fed into the neural network.  
 
-## Steps Required  
-
-#### Separating Features and Labels  
-- **Features (X):** Wafer map images  
-- **Labels (y):** Defect category identifiers  
-- This separation allows the model to learn the mapping from wafer images to defect classes.  
-
----
-
-#### Resizing and Normalizing Wafer Maps  
-- All wafer maps are resized to a fixed target dimension: **(25, 27)**.  
-- Resizing ensures uniformity across images of varying shapes.  
-- Each wafer map is normalized to pixel values between **0 and 1**, improving training efficiency and convergence.  
-
-**Relevance/Importance:** CNNs require inputs of the same size, and normalization prevents any single feature from dominating the training process.  
-
----
-
-#### Visualizing the Resizing Process  
-To verify that resizing preserves important defect patterns:  
-
-- **Before Resizing:** Wafer maps have inconsistent shapes.  
-- **After Resizing:** All wafers are standardized to **25×27**, enabling batch training without losing key spatial structures.  
-
-<img width="574" height="889" alt="image" src="https://github.com/user-attachments/assets/378aa354-db73-4bf2-9584-9f47fbfea04d" />
-
----
-
-#### Train, Validation, and Test Split
-The dataset is divided into:  
-- **Training set:** 27,364 samples  
-- **Validation set:** 6,841 samples  
-- **Test set:** 34,590 samples  
-
-**Relevance/Importance:** 
-- The training set is used to fit the CNN.  
-- Validation set helps tune hyperparameters and monitor overfitting.  
-- The test set provides an unbiased performance evaluation.
+**Relevance/Importance:** This separation ensures the model is evaluated fairly. Using a validation set prevents overfitting, while the independent test set provides an unbiased estimate of real-world performance.
 
 ---
 
