@@ -46,6 +46,7 @@ The `build_model()` function constructs a convolutional neural network (CNN) spe
 **Output Layer** – a softmax layer that produces class probabilities across the defect categories.  
 
 <img width="1024" height="683" alt="image" src="https://github.com/user-attachments/assets/b822f54c-762e-4c27-8f73-acd19aa21400" />
+<img width="307" height="1035" alt="image" src="https://github.com/user-attachments/assets/e98be525-c7b9-4a9f-95b8-e3432ab88e51" />
 
 **Relevance/Importance:**  
 This section defines the backbone of the project. By stacking convolutional, pooling, and dense layers, the model can progressively extract meaningful patterns from wafer images and classify them into defect types with high accuracy.  
