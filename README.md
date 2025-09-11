@@ -45,7 +45,8 @@ The `build_model()` function constructs a convolutional neural network (CNN) spe
 **Fully Connected Layer** – a dense layer with 128 neurons, batch normalization, and dropout for stronger generalization.  
 **Output Layer** – a softmax layer that produces class probabilities across the defect categories.  
 
-<img width="701" height="378" alt="image" src="https://github.com/user-attachments/assets/11777d95-3362-4fc2-a939-9644287bc627" />
+<img width="604" height="339" alt="image" src="https://github.com/user-attachments/assets/04dbe9ef-fa2d-4e97-91fd-f58216b17d8b" />
+<br>
 <img width="307" height="1035" alt="image" src="https://github.com/user-attachments/assets/e98be525-c7b9-4a9f-95b8-e3432ab88e51" />
 
 **Relevance/Importance:**  
